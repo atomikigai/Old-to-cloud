@@ -55,18 +55,22 @@ fn git_upload(){
     }
     */
 
-    //agregar todos los archivos
+   /*  //agregar todos los archivos
     let add = run_git(vec!["add", "."]);
     println!("- Archivos agregados 🥪");
 
-   
     //mensaje archivos actualizados
     let commit = run_git(vec!["commit", "-m updated"]);
     println!("- Procesando archivos ⏰");
        
     //subir archivos actualizados
     let push = run_git(vec!["push"]);
-    println!("- Archivos actualizados con exito 🥂");
+    println!("- Archivos actualizados con exito 🥂"); */
+
+    info(vec!["add", "."], "- Archivos agregados 🥪");
+    info(vec!["commit", "-m updated"], "- Archivos agregados 🥪");
+    info(vec!["push"], "Archivos actualizados con exito 🥂")
+
 
 }
 
@@ -85,15 +89,6 @@ fn is_login() -> bool{
     }
 }
 
-fn handle_output(values: &Output) -> String{
-    let new_value = from_utf8(&values.stdout).unwrap().to_string();
-    new_value.trim().to_string()
-}
-
-
-fn command_status(){
-
-}
 
 fn git_login() -> bool{
     let clean = run_git(vec!["config", "--global", "--unset", "credential.helper"]);
@@ -119,8 +114,12 @@ fn git_login() -> bool{
         let email = run_git(vec!["config", "--global", "user.email", &buf_email]);
         let password =run_git(vec!["config", "--global", "user.password", &buf_password]);
         let store =run_git(vec!["config", "--global", "credential.helper", "store"]);
-        println!("Inicio de sesión exitoso 💡 {:?}", user.status.success());
-        true
+        if status(&user) && status(&email) && status(&password) && status(&store){
+            println!("Inicio de sesión exitoso 💡", );
+            true
+        }else{
+            false
+        }
 
     }else{
         println!("❌ Error ❌");
@@ -156,5 +155,21 @@ fn check_empty(argument: &String) -> bool{
         true
     }else{
         false
+    }
+}
+
+fn handle_output(values: &Output) -> String{
+    let new_value = from_utf8(&values.stdout).unwrap().to_string();
+    new_value.trim().to_string()
+}
+
+fn status(value: &Output) -> bool{
+    value.status.success()
+}
+
+fn info(command: Vec<&str>, message: &str){
+    let exe = run_git(command);
+    if status(&exe){
+        println!("{message}")
     }
 }
