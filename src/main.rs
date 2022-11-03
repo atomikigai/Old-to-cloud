@@ -16,7 +16,7 @@ fn main() {
     check_git();
 
     //comprueba si ya hay un usuario guardado
-    let log = check_git_login();
+    let log = is_login();
     println!("Existe: {:?}", log);
 
     if log {
@@ -29,7 +29,6 @@ fn main() {
             exit(0);
         }
     }
-
 
 }
 
@@ -71,28 +70,26 @@ fn git_upload(){
 
 }
 
-fn check_git_login() -> bool{
+fn is_login() -> bool{
     
     //verifica si existe un usuario
     let git_user = run_git(vec!["config", "--global", "user.name"]);
     let git_email = run_git(vec!["config", "--global", "user.email"]);
     
-    let res_user = to_str(&git_user);
-    let res_email = to_str(&git_email);
-    if !has_whitespace(res_user) && !has_whitespace(res_email){
-        true
-    }else{
+    let res_user = handle_output(&git_user);
+    let res_email = handle_output(&git_email);
+    if check_empty(&res_user) && check_empty(&res_email){
         false
+    }else{
+        true
     }
 }
 
-fn to_str(values: &Output) -> &str{
-    from_utf8(&values.stdout).unwrap()
+fn handle_output(values: &Output) -> String{
+    let new_value = from_utf8(&values.stdout).unwrap().to_string();
+    new_value.trim().to_string()
 }
 
-fn has_whitespace(values: &str) -> bool{
-    values.contains(char::is_whitespace)
-}
 
 fn command_status(){
 
@@ -123,13 +120,14 @@ fn git_login() -> bool{
         let password =run_git(vec!["config", "--global", "user.password", &buf_password]);
         let store =run_git(vec!["config", "--global", "credential.helper", "store"]);
     
-        let user = to_str(&user);
-        let email = to_str(&email);
-        let password = to_str(&password);
-        println!("{:?}", user.chars());
-        if !has_whitespace(&user.to_string()) 
-        && !has_whitespace(&email.to_string()) 
-        && !has_whitespace(&password.to_string()){
+        let user = handle_output(&user);
+        let email = handle_output(&email);
+        let password = handle_output(&password);
+        println!("{:?}", store);
+        if !check_empty(&user.to_string())
+        && !check_empty(&email.to_string())
+        && !check_empty(&password.to_string())
+        {
             println!("Inicio de sesión exitoso 💡");
             true
         }else{
