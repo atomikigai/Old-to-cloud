@@ -79,7 +79,6 @@ fn check_git_login() -> bool{
     
     let res_user = to_str(&git_user);
     let res_email = to_str(&git_email);
-    println!("user: {:?}", has_whitespace(res_user));
     if !has_whitespace(res_user) && !has_whitespace(res_email){
         true
     }else{
@@ -125,15 +124,19 @@ fn git_login() -> bool{
         let store =run_git(vec!["config", "--global", "credential.helper", "store"]);
     
         let user = to_str(&user);
+        let email = to_str(&email);
+        let password = to_str(&password);
         println!("{:?}", user.chars());
-        true
-        /* if user && email && password && store{
+        if !has_whitespace(&user.to_string()) 
+        && !has_whitespace(&email.to_string()) 
+        && !has_whitespace(&password.to_string()){
             println!("Inicio de sesión exitoso 💡");
             true
         }else{
             println!("Revise su información");
             false
-        } */
+        }
+
     }else{
         println!("❌ Error ❌");
         println!("- Credenciales vacias vuelva a ejecutar el app ❌");
