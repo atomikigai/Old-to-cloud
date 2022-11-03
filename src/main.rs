@@ -125,7 +125,7 @@ fn git_login() -> bool{
         let store =run_git(vec!["config", "--global", "credential.helper", "store"]);
     
         let user = to_str(&user);
-        println!("{}", has_whitespace(user));
+        println!("{}", user);
         true
         /* if user && email && password && store{
             println!("Inicio de sesión exitoso 💡");
