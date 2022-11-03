@@ -100,6 +100,7 @@ fn command_status(){
 }
 
 fn git_login() -> bool{
+    let clean = run_git(vec!["config", "--global", "--unset", "credential.helper"]);
 
     let mut buf_user = String::new();
     let mut buf_email = String::new();
