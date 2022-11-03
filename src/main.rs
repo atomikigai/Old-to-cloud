@@ -107,7 +107,7 @@ fn git_login() -> bool{
         let user = run_git(vec!["config", "--global", "user.name", &buf_user]);
         let email = run_git(vec!["config", "--global", "user.email", &buf_email]);
         let password =run_git(vec!["config", "--global", "user.password", &buf_password]);
-        let store =run_git(vec!["credential.helper", "store"]);
+        let store =run_git(vec!["config", "--global", "credential.helper", "store"]);
     
 
         if user && email && password && store{
