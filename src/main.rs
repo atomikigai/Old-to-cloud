@@ -20,14 +20,14 @@ fn main() {
     //comprueba si ya hay un usuario guardado
     let log = check_git_login();
 
-    if log {
+    if !log {
         git_upload();
     }else{
         let new_log = git_login();
         if new_log {
             git_upload()
         }else{
-            panic!("Intenta inciar sesion manualmente con git");
+            panic!("Intente inciar sesion manualmente con git");
         }
     }
 
@@ -86,7 +86,48 @@ fn check_git_login() -> bool{
 }
 
 fn git_login() -> bool{
-    false
+
+    let mut buf_user = String::new();
+    let mut buf_email = String::new();
+    let mut buf_password = String::new();
+
+    println!("Ingresa tu usuario");
+    user_input(&mut buf_user);
+
+    println!("Ingresa tu email");
+    user_input(&mut buf_email);
+    
+    println!("Ingresa un token");
+    user_input(&mut buf_password);
+
+    if !check_empty(&buf_user) 
+    && !check_empty(&buf_email) 
+    && !check_empty(&buf_password)
+    {
+        let user = run_git(vec!["config", "--global", "user.name", &buf_user]);
+        let email = run_git(vec!["config", "--global", "user.email", &buf_email]);
+        let password =run_git(vec!["config", "--global", "user.password", &buf_password]);
+        let store =run_git(vec!["credential.helper", "store"]);
+    
+
+        if user && email && password && store{
+            println!("Inicio de sesión exitoso ✅");
+            true
+        }else{
+            println!("Revise su información");
+            false
+        }
+    }else{
+        false
+    }
+}
+
+fn user_input(buf: &mut String) -> bool{
+    match std::io::stdin()
+    .read_line(buf){
+        Ok(n) => true,
+        _=> false,
+    }
 }
 
 fn check_git(){
@@ -96,5 +137,14 @@ fn check_git(){
         println!("Comprobado ✅")
     }else{
         panic!("❌ Instala GIT para utilizar este programa")
+    }
+}
+
+
+fn check_empty(argument: &String) -> bool{
+    if !argument.is_empty(){
+        false
+    }else{
+        true
     }
 }
