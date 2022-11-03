@@ -122,12 +122,12 @@ fn git_login() -> bool{
     }
 }
 
-fn user_input(buf: &mut String) -> bool{
+fn user_input(buf: &mut String){
     match std::io::stdin()
     .read_line(buf){
         Ok(n) => true,
         _=> false,
-    }
+    };
 }
 
 fn check_git(){
