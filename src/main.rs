@@ -13,7 +13,8 @@ use std::{fs, vec};
  */
 
 fn main() {
-
+    let hand  = emojis::get("🚀");
+    println!("{:?}", hand);
     //comprueba si git esta instalado
     check_git();
 
@@ -60,7 +61,7 @@ fn git_upload(){
     //mensaje archivos actualizados
     let commit = run_git(vec!["commit", "-m", "\"update\""]);
     match commit{
-        true => println!("Procesando archivos ✅"),
+        true => println!("Procesando archivos ⏰"),
         _ => println!("Error al procesar archivos ❌") 
     }
        
