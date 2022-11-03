@@ -1,6 +1,4 @@
-use core::panic;
-use std::process::{Command, Output};
-use std::{fs, vec};
+use std::{process::{Command, exit, Output}, str::from_utf8};
 
 /**
  * El usuario debera tener instalado git y tener una cuenta en git como requisito
@@ -13,35 +11,35 @@ use std::{fs, vec};
  */
 
 fn main() {
-    let hand  = emojis::get("🚀");
-    println!("{:?}", hand);
+
     //comprueba si git esta instalado
     check_git();
 
     //comprueba si ya hay un usuario guardado
     let log = check_git_login();
+    println!("Existe: {:?}", log);
 
     if log {
         git_upload();
     }else{
         let new_log = git_login();
         if new_log {
-            git_upload()
+            git_upload();
         }else{
-            panic!("Intente inciar sesion manualmente con git");
+            exit(0);
         }
     }
 
 
 }
 
-fn run_git(arguments: Vec<&str>) -> bool{
+fn run_git(arguments: Vec<&str>) -> Output{
     let git_command = Command::new("git")
     .args(arguments).output();
 
     let result = match git_command{
-        Ok(s) => true,
-        _ => false
+        Ok(res) => res,
+        _=> panic!("❌ Reportar el error❌")
     };
 
     result
@@ -49,41 +47,56 @@ fn run_git(arguments: Vec<&str>) -> bool{
 
 fn git_upload(){
 
-    println!("Iniciando...");
+    println!("🔥 Iniciando la aplicación 🔥");
+    //recuperar archivos actualizados
+    /* let pull = run_git(vec!["pull"]);
+    match pull{
+        true => println!("- Descargando archivos 🎲"),
+        _ => println!("Error al descargar los archivos ❌") 
+    }
+    */
 
     //agregar todos los archivos
     let add = run_git(vec!["add", "."]);
-    match add{
-        true => println!("Archivos agregados ✅"),
-        _ => println!("Error archivos no agregados ❌") 
-    }
+    println!("- Archivos agregados 🥪");
+
    
     //mensaje archivos actualizados
-    let commit = run_git(vec!["commit", "-m", "\"update\""]);
-    match commit{
-        true => println!("Procesando archivos ⏰"),
-        _ => println!("Error al procesar archivos ❌") 
-    }
+    let commit = run_git(vec!["commit", "-m updated"]);
+    println!("- Procesando archivos ⏰");
        
     //subir archivos actualizados
     let push = run_git(vec!["push"]);
-    match push{
-        true => println!("Archivos actualizados con exito ✅"),
-        _ => println!("Error al subir los archvios ❌") 
-    }
+    println!("- Archivos actualizados con exito 🥂");
+
 }
 
 fn check_git_login() -> bool{
     
     //verifica si existe un usuario
-    let git_user = run_git(vec!["config", "user.name"]);
-    let git_email = run_git(vec!["config", "user.email"]);
+    let git_user = run_git(vec!["config", "--global", "user.name"]);
+    let git_email = run_git(vec!["config", "--global", "user.email"]);
     
-    if git_user && git_email {
-        return true
+    let res_user = to_str(&git_user);
+    let res_email = to_str(&git_email);
+    println!("user: {:?}", has_whitespace(res_user));
+    if !has_whitespace(res_user) && !has_whitespace(res_email){
+        true
     }else{
-        return false
+        false
     }
+}
+
+fn to_str(values: &Output) -> &str{
+    from_utf8(&values.stdout).unwrap()
+}
+
+fn has_whitespace(values: &str) -> bool{
+    values.contains(char::is_whitespace)
+}
+
+fn command_status(){
+
 }
 
 fn git_login() -> bool{
@@ -110,15 +123,20 @@ fn git_login() -> bool{
         let password =run_git(vec!["config", "--global", "user.password", &buf_password]);
         let store =run_git(vec!["config", "--global", "credential.helper", "store"]);
     
-
-        if user && email && password && store{
-            println!("Inicio de sesión exitoso ✅");
+        let user = to_str(&user);
+        println!("{}", has_whitespace(user));
+        true
+        /* if user && email && password && store{
+            println!("Inicio de sesión exitoso 💡");
             true
         }else{
             println!("Revise su información");
             false
-        }
+        } */
     }else{
+        println!("❌ Error ❌");
+        println!("- Credenciales vacias vuelva a ejecutar el app ❌");
+        println!("- Intente inciar sesión manualmente con git ❌");
         false
     }
 }
@@ -132,20 +150,22 @@ fn user_input(buf: &mut String){
 }
 
 fn check_git(){
-    println!("Comprobando instalacion de GIT....");
-    let git = run_git(vec![""]);
-    if git {
-        println!("Comprobado ✅")
+    println!("🚀 Comprobando instalación de GIT 🚀");
+    let git = run_git(vec!["--version"]);
+    let res = from_utf8(&git.stdout).unwrap();
+    if res.len() > 0{
+        println!("- Comprobado 🔥")
     }else{
-        panic!("❌ Instala GIT para utilizar este programa")
+        println!("❌ Instala GIT para utilizar este programa");
+        exit(0)
     }
 }
 
 
 fn check_empty(argument: &String) -> bool{
-    if !argument.is_empty(){
-        false
-    }else{
+    if argument.is_empty(){
         true
+    }else{
+        false
     }
 }
