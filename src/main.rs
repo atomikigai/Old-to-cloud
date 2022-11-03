@@ -19,7 +19,7 @@ fn main() {
     let log = is_login();
     println!("Existe: {:?}", log);
 
-    if log {
+    if !log {
         git_upload();
     }else{
         let new_log = git_login();
@@ -119,21 +119,8 @@ fn git_login() -> bool{
         let email = run_git(vec!["config", "--global", "user.email", &buf_email]);
         let password =run_git(vec!["config", "--global", "user.password", &buf_password]);
         let store =run_git(vec!["config", "--global", "credential.helper", "store"]);
-    
-        let user = handle_output(&user);
-        let email = handle_output(&email);
-        let password = handle_output(&password);
-        println!("{:?}", store);
-        if !check_empty(&user.to_string())
-        && !check_empty(&email.to_string())
-        && !check_empty(&password.to_string())
-        {
-            println!("Inicio de sesión exitoso 💡");
-            true
-        }else{
-            println!("Revise su información");
-            false
-        }
+        println!("Inicio de sesión exitoso 💡 {:?}", user.status.success());
+        true
 
     }else{
         println!("❌ Error ❌");
