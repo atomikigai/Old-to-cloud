@@ -19,7 +19,7 @@ fn main() {
     let log = is_login();
     println!("Existe: {:?}", log);
 
-    if !log {
+    if log {
         git_upload();
     }else{
         let new_log = git_login();
