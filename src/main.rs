@@ -18,7 +18,7 @@ fn main() {
     //comprueba si ya hay un usuario guardado
     let log = is_login();
 
-    if !log {
+    if log {
         git_upload();
     }else{
         let new_log = git_login();
