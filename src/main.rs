@@ -9,7 +9,6 @@ use std::{process::{Command, exit, Output}, str::from_utf8};
  * etc...
  */
 
-///ssfassdgdsg
 fn main() {
 
     //comprueba si git esta instalado
