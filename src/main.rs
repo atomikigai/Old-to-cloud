@@ -51,7 +51,7 @@ fn git_upload(){
     info(vec!["pull"], "- Descargando archivos 🎲", "Error al descargar(pull) los archivos ❌");
     info(vec!["add", "."], "- Archivos agregados 🥪", "Error al agregar(add) archivos ❌");
     info(vec!["commit", "-m updated"], "- Procesando archivos ⏰", "Error al procesar(commit)❌");
-    info(vec!["push"], "Archivos actualizados con exito 🥂", "Error al actualizar(push) repositorios ❌")
+    info(vec!["push"], "- Archivos actualizados con exito 🥂", "Error al actualizar(push) repositorios ❌")
 
 }
 
