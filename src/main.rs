@@ -121,7 +121,7 @@ fn check_git(){
     let git = run_git(vec!["--version"]);
     let res = from_utf8(&git.stdout).unwrap();
     if res.len() > 0{
-        println!("- Comprobado 🔥")
+        println!("- Comprobada 🔥")
     }else{
         println!("❌ Instala GIT para utilizar este programa");
         exit(0)
