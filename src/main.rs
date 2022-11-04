@@ -45,7 +45,7 @@ fn run_git(arguments: Vec<&str>) -> Output{
 
 fn git_upload(){
 
-    println!("🔥 Iniciando la aplicación 🔥");
+    println!("\n🔥 Iniciando la aplicación 🔥");
     //comprueba si el comando se ejecuto con exito
     info(vec!["pull"], "- Descargando archivos 🎲", "Error al descargar(pull) los archivos ❌");
     info(vec!["add", "."], "- Archivos agregados 🥪", "Error al agregar(add) archivos ❌");
