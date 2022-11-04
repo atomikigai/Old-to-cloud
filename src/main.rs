@@ -19,7 +19,7 @@ fn main() {
     let log = is_login();
     println!("Existe: {:?}", log);
 
-    if log {
+    if !log {
         git_upload();
     }else{
         let new_log = git_login();
@@ -76,14 +76,14 @@ fn git_login() -> bool{
     let mut buf_email = String::new();
     let mut buf_password = String::new();
 
-    println!("Ingresa tu usuario");
+    println!("🤖 Ingresa tu usuario: ");
     //asigna el valor del usuario a la variable
     user_input(&mut buf_user);
 
-    println!("Ingresa tu email");
+    println!("📩 Ingresa tu email: ");
     user_input(&mut buf_email);
     
-    println!("Ingresa un token");
+    println!("🪙 Ingresa un token: ");
     user_input(&mut buf_password);
 
     if !check_empty(&buf_user) 
